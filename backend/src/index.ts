@@ -57,8 +57,8 @@ app.get('/api/games/active', (req, res) => {
 
 setupSocketIO(io);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 4000;
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`GestPlay Backend is listening on port ${PORT}`);
 });
