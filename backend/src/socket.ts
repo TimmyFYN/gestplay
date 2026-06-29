@@ -1,4 +1,5 @@
 import { Server, Socket } from 'socket.io';
+import { Chess } from 'chess.js';
 
 export const activeGames: Record<string, { 
   fen: string, 
@@ -103,31 +104,33 @@ export const setupSocketIO = (io: Server) => {
       }
 
       try {
-        const engineUrl = process.env.PYTHON_ENGINE_URL || process.env.ENGINE_URL || 'http://127.0.0.1:5000';
-        const response = await fetch(`${engineUrl}/chess/validate_move`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ fen: game.fen, move })
-        });
+        const chess = new Chess(game.fen);
         
-        const result = await response.json();
-        
-        if (result.valid) {
-          game.fen = result.fen;
+        let moveObj = null;
+        try {
+          moveObj = chess.move({
+            from: move.substring(0, 2),
+            to: move.substring(2, 4),
+            promotion: move.length > 4 ? move[4] : 'q'
+          });
+        } catch (e) {}
+
+        if (moveObj) {
+          game.fen = chess.fen();
           io.to(roomId).emit('move_made', { 
             move, 
-            fen: result.fen, 
+            fen: game.fen, 
             playerId: (socket as any).playerId,
-            is_check: result.is_check,
-            is_checkmate: result.is_checkmate,
-            is_draw: result.is_draw
+            is_check: chess.inCheck(),
+            is_checkmate: chess.isCheckmate(),
+            is_draw: chess.isDraw()
           });
         } else {
           socket.emit('error', { message: 'Invalid move detected by engine' });
         }
       } catch (err) {
-        console.error('Python Engine connection error:', err);
-        socket.emit('error', { message: 'Game engine unavailable' });
+        console.error('Chess logic error:', err);
+        socket.emit('error', { message: 'Game engine error' });
       }
     });
 
