@@ -103,7 +103,8 @@ export const setupSocketIO = (io: Server) => {
       }
 
       try {
-        const response = await fetch(`${process.env.ENGINE_URL || 'http://127.0.0.1:8000'}/chess/validate_move`, {
+        const engineUrl = process.env.PYTHON_ENGINE_URL || process.env.ENGINE_URL || 'http://127.0.0.1:5000';
+        const response = await fetch(`${engineUrl}/chess/validate_move`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fen: game.fen, move })
