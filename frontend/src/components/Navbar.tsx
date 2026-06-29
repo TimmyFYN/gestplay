@@ -18,6 +18,7 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center space-x-6">
+            <Link href="/play" className="text-sm font-medium text-cyan-400 hover:text-cyan-300 transition">Play</Link>
             <Link href="/about" className="text-sm text-slate-300 hover:text-white transition">About</Link>
             {isAuthenticated ? (
               <>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Trophy, Swords, Target, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -70,11 +71,20 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-          Welcome, {user?.username}
-        </h1>
-        <p className="text-gray-400">Track your progress and review your past matches.</p>
+      <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            Welcome, {user?.username}
+          </h1>
+          <p className="text-gray-400">Track your progress and review your past matches.</p>
+        </div>
+        <Link 
+          href="/play" 
+          className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-white font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(6,182,212,0.4)] flex items-center gap-2"
+        >
+          <Swords className="w-5 h-5" />
+          Play a Game
+        </Link>
       </div>
 
       {/* Stats Grid */}
