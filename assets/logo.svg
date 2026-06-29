@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F2027" />
+      <stop offset="50%" stop-color="#203A43" />
+      <stop offset="100%" stop-color="#2C5364" />
+    </linearGradient>
+    <linearGradient id="hand-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00C9FF" />
+      <stop offset="100%" stop-color="#92FE9D" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="100" height="100" rx="20" fill="url(#bg-gradient)" />
+  
+  <!-- Hand with negative space play button. 
+       Outer path traces the hand. 
+       Inner path traces the play button. 
+       fill-rule="evenodd" makes the inner path a cutout. -->
+  <path d="M35 75 
+           C 25 75, 20 65, 20 55 
+           V 40 C 20 36, 23 33, 27 33 S 34 36, 34 40 V 48 
+           V 25 C 34 21, 37 18, 41 18 S 48 21, 48 25 V 33 
+           V 15 C 48 11, 51 8, 55 8 S 62 11, 62 15 V 40
+           V 25 C 62 21, 65 18, 69 18 S 76 21, 76 25 V 60
+           C 76 70, 70 80, 55 80 Z 
+           M 43 45 V 65 L 60 55 Z" 
+        fill="url(#hand-gradient)" fill-rule="evenodd" />
+</svg>
