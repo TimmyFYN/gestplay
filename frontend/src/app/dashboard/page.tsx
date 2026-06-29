@@ -22,7 +22,7 @@ export default function DashboardPage() {
     const fetchProfile = async () => {
       if (!token) return;
       try {
-        const res = await fetch('http://localhost:4000/api/users/profile', {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000') + '/api/users/profile', {
           headers: {
             Authorization: `Bearer ${token}`
           }

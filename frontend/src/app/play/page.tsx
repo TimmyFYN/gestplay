@@ -38,17 +38,6 @@ export default function GameSelectionHub() {
       {/* Background ambient light */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Header */}
-      <header className="p-6 flex justify-between items-center backdrop-blur-md relative z-10 border-b border-white/5">
-        <Link href="/" className="flex items-center gap-2 hover:text-cyan-400 transition cursor-pointer">
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Home</span>
-        </Link>
-        <div className="font-bold text-xl tracking-widest text-emerald-400">
-          SELECT GAME
-        </div>
-        <div className="w-24"></div> {/* spacer */}
-      </header>
 
       {/* Selection Cards */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 mt-12 md:mt-24 relative z-10">

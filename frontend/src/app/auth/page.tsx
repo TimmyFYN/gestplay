@@ -20,7 +20,7 @@ export default function AuthPage() {
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
     
     try {
-      const res = await fetch(`http://localhost:4000${endpoint}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

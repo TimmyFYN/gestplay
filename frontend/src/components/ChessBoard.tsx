@@ -9,7 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Copy, Check } from "lucide-react";
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:4000";
+const SOCKET_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000");
 
 const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const RANKS = ['8', '7', '6', '5', '4', '3', '2', '1'];

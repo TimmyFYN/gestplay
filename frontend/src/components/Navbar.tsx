@@ -11,12 +11,14 @@ export default function Navbar() {
     <nav className="w-full border-b border-white/10 bg-black/50 backdrop-blur-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          <div className="flex-shrink-0 flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3 text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-emerald-400">
+              <img src="/logo.svg" alt="GestPlay Logo" width={32} height={32} />
               GestPlay
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-6">
+            <Link href="/about" className="text-sm text-slate-300 hover:text-white transition">About</Link>
             {isAuthenticated ? (
               <>
                 <Link href="/dashboard" className="flex items-center text-sm font-medium text-gray-300 hover:text-white transition-colors">

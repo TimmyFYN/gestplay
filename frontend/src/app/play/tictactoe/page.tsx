@@ -12,17 +12,6 @@ export default function TicTacToeRoom() {
         <GestureEngine>
           {/* Game UI Layer */}
           <div className="absolute inset-0 flex flex-col pointer-events-auto">
-            {/* Header */}
-            <header className="p-6 flex justify-between items-center backdrop-blur-md border-b border-white/5 relative z-50">
-              <Link href="/play" className="flex items-center gap-2 hover:text-cyan-400 transition cursor-pointer">
-                <ArrowLeft className="w-5 h-5" />
-                <span>Back to Hub</span>
-              </Link>
-              <div className="font-bold text-xl tracking-widest text-emerald-400">
-                TIC-TAC-TOE MATCH
-              </div>
-              <div className="w-24"></div> {/* spacer */}
-            </header>
 
             {/* Board Container */}
             <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-0 relative">

@@ -7,7 +7,7 @@ import { io, Socket } from "socket.io-client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Copy, Check } from "lucide-react";
 
-const SOCKET_URL = "http://localhost:4000";
+const SOCKET_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000");
 
 type TTTSymbol = 'X' | 'O' | null;
 

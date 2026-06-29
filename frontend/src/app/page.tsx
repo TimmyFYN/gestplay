@@ -72,19 +72,7 @@ function LandingPage() {
       transition={{ duration: 1, delay: 0.2 }}
       className="flex flex-col min-h-screen"
     >
-      {/* Navbar */}
-      <nav className="flex items-center justify-between p-6 max-w-7xl w-full mx-auto backdrop-blur-md sticky top-0 z-40 border-b border-white/5">
-        <div className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="GestPlay Logo" width={32} height={32} />
-          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-emerald-400">GestPlay</span>
-        </div>
-        <div className="flex gap-6 items-center">
-          <Link href="/about" className="text-sm text-slate-300 hover:text-white transition">About</Link>
-          <Link href="/login" className="text-sm font-medium px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 transition backdrop-blur-md border border-white/10">
-            Sign In
-          </Link>
-        </div>
-      </nav>
+
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-6 py-20 relative overflow-hidden">

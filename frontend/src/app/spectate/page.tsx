@@ -20,7 +20,7 @@ export default function SpectatorDashboard() {
 
   const fetchGames = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/games/active");
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000") + "/api/games/active");
       const data = await res.json();
       if (data.success) {
         setGames(data.games);
@@ -48,17 +48,6 @@ export default function SpectatorDashboard() {
       {/* Background ambient light */}
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none" />
 
-      {/* Header */}
-      <header className="p-6 flex justify-between items-center backdrop-blur-md relative z-10 border-b border-white/5">
-        <Link href="/" className="flex items-center gap-2 hover:text-indigo-400 transition cursor-pointer">
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Home</span>
-        </Link>
-        <div className="font-bold text-xl tracking-widest text-indigo-400">
-          SPECTATOR DASHBOARD
-        </div>
-        <div className="w-32"></div> {/* spacer */}
-      </header>
 
       {/* Main Content */}
       <div className="flex-1 max-w-6xl w-full mx-auto p-6 mt-8 relative z-10">
