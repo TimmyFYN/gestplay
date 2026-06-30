@@ -29,6 +29,7 @@ export function ChessBoard() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [myColor, setMyColor] = useState<"w" | "b" | "spectator" | null>(null);
+  const [opponentPresent, setOpponentPresent] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Initialize Socket and Room ID
@@ -60,6 +61,17 @@ export function ChessBoard() {
       if (data.fen) {
         game.load(data.fen);
         setBoard(game.board());
+      }
+      setOpponentPresent(data.opponentPresent);
+    });
+
+    newSocket.on("player_joined", (data) => {
+      setOpponentPresent(true);
+    });
+
+    newSocket.on("player_left", (data) => {
+      if (data.color === 'w' || data.color === 'b') {
+        setOpponentPresent(false);
       }
     });
 
@@ -252,6 +264,21 @@ export function ChessBoard() {
         })
       ))}
       </div>
+      
+      {/* Player Status Footer */}
+      {myColor && (
+        <div className="mt-8 px-6 py-3 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 text-sm font-semibold tracking-wider flex items-center gap-4">
+          <span>YOU ARE: <span className={myColor === 'w' ? "text-slate-100" : myColor === 'b' ? "text-slate-500" : "text-slate-400"}>
+            {myColor === 'spectator' ? 'SPECTATOR' : (myColor === 'w' ? 'WHITE' : 'BLACK')}
+          </span></span>
+          {myColor !== 'spectator' && !opponentPresent && (
+            <span className="text-yellow-400 animate-pulse flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+              Waiting for opponent...
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -89,7 +89,12 @@ export const setupSocketIO = (io: Server) => {
 
       socket.join(roomId);
       socket.to(roomId).emit('player_joined', { playerId: effectivePlayerId, color: assignedColor });
-      socket.emit('room_joined', { roomId, fen: game.fen, color: assignedColor });
+      socket.emit('room_joined', { 
+        roomId, 
+        fen: game.fen, 
+        color: assignedColor,
+        opponentPresent: (assignedColor === 'w' ? !!game.players.black : (assignedColor === 'b' ? !!game.players.white : false))
+      });
       console.log(`User ${effectivePlayerId} (Socket ${socket.id}) joined room: ${roomId} as ${assignedColor}`);
     });
 
@@ -174,7 +179,14 @@ export const setupSocketIO = (io: Server) => {
 
       socket.join(roomId);
       socket.to(roomId).emit('ttt_player_joined', { playerId: effectivePlayerId, color: assignedColor });
-      socket.emit('ttt_room_joined', { roomId, board: game.board, turn: game.turn, status: game.status, color: assignedColor });
+      socket.emit('ttt_room_joined', { 
+        roomId, 
+        board: game.board, 
+        turn: game.turn, 
+        status: game.status, 
+        color: assignedColor,
+        opponentPresent: (assignedColor === 'X' ? !!game.players.O : (assignedColor === 'O' ? !!game.players.X : false))
+      });
       console.log(`User ${effectivePlayerId} joined TTT room: ${roomId} as ${assignedColor}`);
     });
 
@@ -233,11 +245,13 @@ export const setupSocketIO = (io: Server) => {
         if (game.players.white === playerId && game.sockets.white === socket.id) {
           game.players.white = null;
           game.sockets.white = null;
+          io.to(roomId).emit('player_left', { color: 'w' });
           console.log(`Freed White slot in ${roomId}`);
         }
         if (game.players.black === playerId && game.sockets.black === socket.id) {
           game.players.black = null;
           game.sockets.black = null;
+          io.to(roomId).emit('player_left', { color: 'b' });
           console.log(`Freed Black slot in ${roomId}`);
         }
       }
@@ -247,11 +261,13 @@ export const setupSocketIO = (io: Server) => {
         if (game.players.X === playerId && game.sockets.X === socket.id) {
           game.players.X = null;
           game.sockets.X = null;
+          io.to(roomId).emit('ttt_player_left', { color: 'X' });
           console.log(`Freed X slot in ${roomId}`);
         }
         if (game.players.O === playerId && game.sockets.O === socket.id) {
           game.players.O = null;
           game.sockets.O = null;
+          io.to(roomId).emit('ttt_player_left', { color: 'O' });
           console.log(`Freed O slot in ${roomId}`);
         }
       }

@@ -21,6 +21,7 @@ export function TicTacToeBoard() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [myColor, setMyColor] = useState<"X" | "O" | "spectator" | null>(null);
+  const [opponentPresent, setOpponentPresent] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // Game State
@@ -61,6 +62,17 @@ export function TicTacToeBoard() {
       if (data.board) setBoard(data.board);
       if (data.turn) setTurn(data.turn);
       if (data.status) setStatus(data.status);
+      setOpponentPresent(data.opponentPresent);
+    });
+
+    newSocket.on("ttt_player_joined", (data) => {
+      setOpponentPresent(true);
+    });
+
+    newSocket.on("ttt_player_left", (data) => {
+      if (data.color === 'X' || data.color === 'O') {
+        setOpponentPresent(false);
+      }
     });
 
     newSocket.on("ttt_move_made", (data) => {
@@ -243,10 +255,16 @@ export function TicTacToeBoard() {
 
       {/* Player Status Footer */}
       {myColor && (
-        <div className="mt-8 px-6 py-3 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 text-sm font-semibold tracking-wider">
-          YOU ARE PLAYING AS: <span className={myColor === 'X' ? "text-cyan-400" : myColor === 'O' ? "text-emerald-400" : "text-slate-400"}>
+        <div className="mt-8 px-6 py-3 rounded-full bg-slate-800/80 backdrop-blur border border-white/10 text-sm font-semibold tracking-wider flex items-center gap-4">
+          <span>YOU ARE PLAYING AS: <span className={myColor === 'X' ? "text-cyan-400" : myColor === 'O' ? "text-emerald-400" : "text-slate-400"}>
             {myColor === 'spectator' ? 'SPECTATOR' : `PLAYER ${myColor}`}
-          </span>
+          </span></span>
+          {myColor !== 'spectator' && !opponentPresent && (
+            <span className="text-yellow-400 animate-pulse flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-yellow-400"></span>
+              Waiting for opponent...
+            </span>
+          )}
         </div>
       )}
     </div>
