@@ -37,7 +37,9 @@ export function ChessBoard() {
     let currentRoomId = searchParams.get("room");
     
     if (!currentRoomId) {
-      currentRoomId = `chess-${Math.random().toString(36).substring(2, 9)}`;
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const shortCode = Array.from({length: 4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      currentRoomId = shortCode;
       router.replace(`/play/chess?room=${currentRoomId}`);
     }
     

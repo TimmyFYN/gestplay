@@ -1,37 +1,53 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft, Users } from "lucide-react";
+import { ArrowLeft, Users, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function GameSelectionHub() {
   const [joinCode, setJoinCode] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState<"chess" | "tictactoe" | null>(null);
+  const [createCode, setCreateCode] = useState("");
   const router = useRouter();
 
-  const handleJoin = (e: React.FormEvent) => {
+  const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!joinCode) return;
 
-    let targetUrl = "";
-    
+    let targetCode = joinCode.trim().toUpperCase();
+
     // Check if it's a full URL
-    if (joinCode.includes("http")) {
-      targetUrl = joinCode;
-    } else {
-      // It's just a code like "chess-123" or "ttt-456"
-      if (joinCode.startsWith("chess-")) {
-        targetUrl = `/play/chess?room=${joinCode}`;
-      } else if (joinCode.startsWith("ttt-")) {
-        targetUrl = `/play/tictactoe?room=${joinCode}`;
-      } else {
-        alert("Invalid room code format. It should start with 'chess-' or 'ttt-'");
-        return;
-      }
+    if (targetCode.includes("HTTP")) {
+      router.push(joinCode.trim());
+      return;
     }
-    
-    router.push(targetUrl);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"}/api/games/active`);
+      const data = await res.json();
+      const game = data.games.find((g: any) => g.roomId.toUpperCase() === targetCode);
+      
+      if (game) {
+        router.push(`/play/${game.gameType}?room=${game.roomId}`);
+      } else {
+        alert("Room not found or no longer active. Please check the code and try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to connect to the server to find the room.");
+    }
+  };
+
+  const handleCreate = (e: React.FormEvent) => {
+    e.preventDefault();
+    let finalCode = createCode.trim().toUpperCase();
+    if (!finalCode) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      finalCode = Array.from({length: 4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
+    router.push(`/play/${showCreateModal}?room=${finalCode}`);
   };
   return (
     <main className="min-h-screen bg-slate-950 text-white overflow-hidden relative">
@@ -51,7 +67,8 @@ export default function GameSelectionHub() {
 
         <div className="grid md:grid-cols-2 gap-8 w-full max-w-5xl">
           {/* Chess Card */}
-          <Link href="/play/chess">
+          {/* Chess Card */}
+          <div onClick={() => setShowCreateModal("chess")}>
             <motion.div 
               whileHover={{ scale: 1.02, y: -5 }}
               whileTap={{ scale: 0.98 }}
@@ -66,10 +83,10 @@ export default function GameSelectionHub() {
                 <p className="text-slate-400">Master strategy with full gesture control. Real-time engine validation.</p>
               </div>
             </motion.div>
-          </Link>
+          </div>
 
           {/* Tic-Tac-Toe Card */}
-          <Link href="/play/tictactoe">
+          <div onClick={() => setShowCreateModal("tictactoe")}>
             <motion.div 
               whileHover={{ scale: 1.02, y: -5 }}
               whileTap={{ scale: 0.98 }}
@@ -85,7 +102,7 @@ export default function GameSelectionHub() {
                 <p className="text-slate-400">Fast-paced classic. Drop your marks instantly with a pinch.</p>
               </div>
             </motion.div>
-          </Link>
+          </div>
         </div>
 
         {/* Join Existing Room */}
@@ -102,7 +119,7 @@ export default function GameSelectionHub() {
           <form onSubmit={handleJoin} className="flex gap-4">
             <input 
               type="text" 
-              placeholder="e.g. chess-x8f2a or paste full URL" 
+              placeholder="e.g. TIMMY or paste full URL" 
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value)}
               className="flex-1 bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
@@ -117,6 +134,57 @@ export default function GameSelectionHub() {
           </form>
         </motion.div>
       </div>
+      </div>
+
+      {/* Create Room Modal */}
+      <AnimatePresence>
+        {showCreateModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-slate-900 border border-white/10 rounded-3xl p-8 w-full max-w-md relative shadow-2xl"
+            >
+              <button 
+                onClick={() => setShowCreateModal(null)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <h3 className="text-2xl font-bold mb-2 text-white">
+                Create {showCreateModal === "chess" ? "Chess" : "Tic-Tac-Toe"} Match
+              </h3>
+              <p className="text-slate-400 mb-6 text-sm">
+                Enter a custom game code to share, or leave blank to auto-generate a short code.
+              </p>
+
+              <form onSubmit={handleCreate} className="flex flex-col gap-4">
+                <input 
+                  type="text"
+                  maxLength={12}
+                  placeholder="e.g. TIMMY" 
+                  value={createCode}
+                  onChange={(e) => setCreateCode(e.target.value)}
+                  className="bg-slate-950 border border-white/10 rounded-xl px-4 py-3 text-white text-lg font-bold tracking-wider placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-colors uppercase"
+                />
+                <button 
+                  type="submit"
+                  className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl font-bold transition-all text-lg text-white"
+                >
+                  Start Match
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
