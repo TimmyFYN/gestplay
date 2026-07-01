@@ -134,7 +134,6 @@ export default function GameSelectionHub() {
           </form>
         </motion.div>
       </div>
-      </div>
 
       {/* Create Room Modal */}
       <AnimatePresence>
